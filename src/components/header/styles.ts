@@ -40,3 +40,14 @@ export const Title = styled.div`
     font-weight: 500;
   }
 `;
+
+export const User = styled.div`
+  border: 2px solid #1677ff;
+  background: rgb(121, 197, 137, 0.3);
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  height: 90%;
+`;

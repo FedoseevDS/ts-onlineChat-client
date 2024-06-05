@@ -1,29 +1,73 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { Auth, Template } from './styles.ts';
+import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Socket, connect } from 'socket.io-client';
+
+import { addUser } from '../../store/users/index.ts';
+
+import { Auth, Input, Template } from './styles.ts';
+
+const socket: Socket = connect('http://localhost:5004');
+
+interface ChangeEvent<T = HTMLInputElement> {
+  target: T;
+}
 
 const Main: React.FC = () => {
-  const [data, setData] = useState('');
+  const [username, setUsername] = useState<string>('');
+  const [users, setUsers] = useState<string[]>([]);
+  const [isError, setIsError] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5010/chat')
-      .then((res) => res.json())
-      // .then((res) => console.log('res', res));
-      .then((res) => setData(res.message));
-    // .then((res) => console.log('res', res));
+    socket.on('users', (data) => {
+      setUsers(data);
+    });
   }, []);
 
-  console.log('data', data);
+  const onOpenChat = useCallback(() => {
+    if (users.includes(username)) {
+      setIsError(true);
+      setUsername('');
+      return;
+    }
+
+    dispatch(addUser({ id: nanoid(), name: username, room: 'common' }));
+    navigate('/chat');
+    setUsername('');
+  }, [navigate, dispatch, username, users]);
+
+  const onChange = useCallback(({ target: { value } }: ChangeEvent) => {
+    if (value) {
+      setIsError(false);
+    }
+
+    setUsername(value);
+  }, []);
 
   return (
     <Template>
       <Auth>
-        {/* <span>Для входа в онлайн чат введите свой ник</span> */}
-        <span>{data}</span>
-        <form>
-          <input placeholder='Введите ник' type='text' />
-          <button>Войти</button>
-        </form>
+        <span>Для входа в живой чат введите свой ник</span>
+        <div>
+          <Input>
+            <input
+              name='username'
+              placeholder='Введите ник'
+              type='text'
+              value={username}
+              onChange={onChange}
+            />
+            {isError && <span>Такой ник уже существует</span>}
+          </Input>
+          <button disabled={!username} onClick={onOpenChat}>
+            Войти
+          </button>
+        </div>
       </Auth>
     </Template>
   );

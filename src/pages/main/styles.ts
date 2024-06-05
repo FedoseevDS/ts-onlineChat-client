@@ -15,31 +15,54 @@ export const Auth = styled.div`
   gap: 10px;
   padding: 20px;
 
-  & form {
+  & > div {
     display: flex;
     justify-content: center;
     gap: 10px;
 
-    & input {
-      border: 1px solid green;
-      border-radius: 10px;
-      padding: 5px 10px;
-
-      &:focus {
-        outline: 0;
-      }
-    }
-
     & button {
+      padding: 5px 10px;
       border-radius: 10px;
       border: none;
       background: green;
       color: white;
       cursor: pointer;
+      align-self: start;
+
+      &:disabled {
+        background: grey;
+
+        &:hover {
+          background: grey;
+          cursor: no-drop;
+        }
+      }
 
       &:hover {
         background: #79c589;
       }
     }
+  }
+`;
+
+export const Input = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  & input {
+    border: 1px solid green;
+    border-radius: 10px;
+    padding: 5px 10px;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  & span {
+    color: red;
+    font-size: 10px;
+    text-align: center;
   }
 `;

@@ -23,6 +23,16 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   rules: {
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
     'react/prop-types': [2, { ignore: ['children'] }],
     'sort-keys': 0,
     semi: ['error', 'always'],
@@ -60,7 +70,7 @@ module.exports = {
     'react/destructuring-assignment': 0,
     'react/jsx-props-no-spreading': 0,
     'react/jsx-no-useless-fragment': 0,
-    'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.ts'] }],
     'react/jsx-fragments': 0,
     'react/button-has-type': 0,
     'react/jsx-sort-props': [
